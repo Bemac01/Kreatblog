@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { maxHeaderSize } = require('node:http');
 
 const userSchema = new mongoose.Schema({
     username: {
