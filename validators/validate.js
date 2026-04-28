@@ -4,17 +4,12 @@ exports.validate = (req, res, next) => {
     const errors = validationResult(req);
     const errorMapped = {};
 
-    if(Object.keys(errors).length > 0) {
+    if(Object.keys(errors.errors).length === 0) {
         next();
     } else {
-        errors.errors.map(err => {
-            errorMapped[err.path] = err.msg;
+        errors.errors.map(error => {
+            errorMapped[error.path] = error.msg;
         })
-        res.status(400).json({
-            statusCode: 400,    
-            success: false,
-            message: 'Validation Error',
-            errors: errorMapped
-        });
+        res.status(400).json(errorMapped);
     }
 }

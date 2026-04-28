@@ -1,6 +1,7 @@
-const { port, connection_url } = process.env;
+const { port, connection_url, jwt_secret } = process.env;
 
 module.exports = {
     port,
-    connection_url
+    connection_url,
+    jwt_secret
 }   
