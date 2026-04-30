@@ -8,7 +8,7 @@ router.post('/register', registerValidation, validate, authController.register);
 
 router.post('/login', loginValidation, validate, authController.login);
 
-router.post('/verification-code', emailVerificationValidation, validate, authController.sendVerificationEmail);
+router.post('/verification-code', emailVerificationValidation, validate, authController.verifyCode);
 
 
 module.exports = router;

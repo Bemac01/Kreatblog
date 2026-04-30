@@ -3,6 +3,7 @@ const { hashPassword, } = require('../utils/hashpass');
 const { comparePassword } = require('../utils/comparePass');
 const { generateToken } = require('../utils/generateToken');
 const {generateCode} = require('../utils/generateCode');
+const sendEmail = require('../utils/sendEmail');
 
 exports.register = async (req, res, next) => {
     try {
@@ -48,7 +49,7 @@ exports.login = async (req, res, next) => {
     }
 };
 
-exports.sendVerificationEmail = async (req, res, next) => {
+exports.verifyCode = async (req, res, next) => {
     try {
 
         const { email } = req.body;
@@ -56,7 +57,7 @@ exports.sendVerificationEmail = async (req, res, next) => {
         const user = await User.findOne({ email });
         
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            res.status(404).json({ message: 'User not found' });
         }   
 
         // Logic to send verification email goes here
@@ -69,6 +70,12 @@ exports.sendVerificationEmail = async (req, res, next) => {
         await user.save();
 
         //send email logic here using nodemailer or any email service provider
+        await sendEmail({
+            emailto: user.email,
+            subject: 'Email Verification',
+            code: code,
+            content: 'verify your email'
+        });
 
         res.status(200).json({ message: 'Verification email sent' });
     } catch (error) {

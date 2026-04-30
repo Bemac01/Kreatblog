@@ -1,13 +1,18 @@
 
 
 const generateCode = (codeLength) => {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let code = '';  
+    const number = String(Math.random()).split('.')[1].split("");
+    const length = number.length;
+
+    let code = '';
+    if (!codeLength) {
+        codeLength = 6;
+    }   
+    
     for (let i = 0; i < codeLength; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        code += characters[randomIndex];
+        code = code + number[length - (i + 1)];
     }
     return code;
 }
 
-module.exports = generateCode;
+module.exports = {generateCode};
