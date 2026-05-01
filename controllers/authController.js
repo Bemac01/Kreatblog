@@ -138,3 +138,30 @@ exports.forgotPassword = async (req, res, next) => {
         next(error);
     }   
 };
+
+exports.verifyForgotPasswordCode = async (req, res, next) => {
+    try {
+        const { email, code, newPassword } = req.body;
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        if (user.forgotPasswordCode !== code) {
+            return res.status(400).json({ message: 'Invalid code' });
+        }
+        user.password = await hashPassword(newPassword);
+        user.forgotPasswordCode = null;
+        await user.save();
+        res.status(200).json({ message: 'Password reset successful' });
+    } catch (error) {
+        next(error);
+    }           
+};
+
+exports.updatePassword = async (req, res, next) => {
+   try{
+        res.json(req.user);
+   }catch (error) {
+    next(error);
+   }
+};
