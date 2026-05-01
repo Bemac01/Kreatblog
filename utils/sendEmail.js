@@ -12,20 +12,18 @@ const sendEmail = async ({emailto, subject, code, content}) => {
         } 
     });
 
-    const mailOptions = {
+
+    await transporter.sendMail({
         to: emailto,
         subject,
         html: `
-        <h3>Use this code to ${content}</h3>
-        <p>Your verification code is: <strong>${code}</strong></p>
+        <div>
+            <h3>Use this code to ${content}</h3>
+            <p>Your verification code is: <strong>${code}</strong></p>
+        </div>
         `,
-    };  
-
-    try {
-        await transporter.sendMail(mailOptions);
-    } catch (error) {
-        console.error('Error sending email:', error);
-    }
+    });
+    
 };
 
 module.exports = sendEmail;

@@ -43,3 +43,16 @@ exports.emailVerificationValidation = [
         .isEmail()
         .withMessage('invalid email')
 ];
+
+exports.CodeValidation = [
+    check('email')
+        .notEmpty()
+        .withMessage('Email is required')
+        .isEmail()
+        .withMessage('invalid email'),
+    check('code')
+        .notEmpty()
+        .withMessage('Verification code is required')
+        .isLength({ min: 6, max: 6 })
+        .withMessage('Verification code must be 6 characters long')
+];

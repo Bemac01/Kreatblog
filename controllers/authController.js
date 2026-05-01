@@ -82,3 +82,59 @@ exports.verifyCode = async (req, res, next) => {
         next(error);
     }   
 };
+
+
+exports.verifyUserCode = async (req, res, next) => {
+    try {
+
+        const { email, code } = req.body;   
+        
+        const user = await User.findOne({ email });
+        
+        if (!user) {
+            res.status(404).json({ message: 'User not found' });
+        }   
+        
+        if (user.isVerified) {
+            return res.status(400).json({ message: 'User is already verified' });
+        }
+        
+        if (user.verificationCode !== code) {
+            return res.status(400).json({ message: 'Invalid verification code' });
+        }
+
+        user.isVerified = true;
+        user.verificationCode = null;
+        await user.save(); 
+
+        res.status(200).json({ message: 'User verified successfully' });
+
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+exports.forgotPassword = async (req, res, next) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }   
+        const code = generateCode(6);
+        user.forgotPasswordCode = code;
+        await user.save();
+
+        await sendEmail({
+            emailto: user.email,
+            subject: 'forget password verification',
+            code: code,
+            content: 'Use this code to reset your password'
+        });
+
+        res.status(200).json({ message: 'Password reset code sent to email' });
+    } catch (error) {
+        next(error);
+    }   
+};
