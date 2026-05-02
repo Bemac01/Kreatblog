@@ -160,8 +160,40 @@ exports.verifyForgotPasswordCode = async (req, res, next) => {
 
 exports.updatePassword = async (req, res, next) => {
    try{
-        res.json(req.user);
-   }catch (error) {
-    next(error);
-   }
+        const { currentPassword, newPassword } = req.body;
+
+        const { email } = req.user;
+
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            res.status(404).json({ message: 'User not found' });
+        }
+
+        const isMatch = await comparePassword(currentPassword, user.password);
+        
+        if (!isMatch) {
+            res.status(400).json({ message: 'Current password is incorrect' });
+        }
+
+        if (currentPassword === newPassword) {
+            res.status(400).json({ message: 'New password must be different from current password' });
+        }
+
+        user.password = await hashPassword(newPassword);
+        await user.save();
+
+        res.status(200).json({ message: 'Password updated successfully' });
+        
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.updateProfile = async (req, res, next) => {
+    try{
+
+    }catch (error) {
+        next(error);
+    }
 };

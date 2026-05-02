@@ -28,7 +28,9 @@ router.post('/forgot-password', emailVerificationValidation, validate, authContr
 
 router.post('/reset-password', verifyForgotPasswordCodeValidation, validate, authController.verifyForgotPasswordCode);
 
-router.put('/update-password', isAuth, updatePasswordValidation, validate, authController.updatePassword);
+router.put('/update-password', updatePasswordValidation, validate, isAuth, authController.updatePassword);
+
+router.put('/update-profile', isAuth, authController.updateProfile);
 
 
 module.exports = router;

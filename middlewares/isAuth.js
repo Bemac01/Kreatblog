@@ -13,7 +13,7 @@ exports.isAuth = (req, res, next) => {
 
             if(payload){
                 req.user = {
-                    _id: payload._id,
+                    userid: payload._id,
                     username: payload.username,
                     email: payload.email,
                     role: payload.role
